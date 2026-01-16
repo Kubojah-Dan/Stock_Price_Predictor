@@ -1,0 +1,66 @@
+
+---
+
+# 🚫 `.gitignore`
+
+This `.gitignore` is tailored **exactly** for your project.
+
+```gitignore
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ======================
+# Virtual Environments
+# ======================
+.StockVenv/
+venv/
+env/
+
+# ======================
+# Jupyter
+# ======================
+.ipynb_checkpoints/
+
+# ======================
+# VS Code
+# ======================
+.vscode/
+
+# ======================
+# OS files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Data & Outputs (large / reproducible)
+# ======================
+data/*.csv
+outputs/*.html
+notebooks/*.ipynb
+
+# ======================
+# Models (optional: keep or ignore)
+# Uncomment if you DON'T want models on GitHub
+# models/*.pkl
+
+# ======================
+# Logs
+# ======================
+*.log
+
+# ======================
+# Streamlit cache
+# ======================
+.streamlit/
+
+# ======================
+# Secrets (future broker keys)
+# ======================
+.env
+.env.*

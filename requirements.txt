@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+xgboost
+lightgbm
+matplotlib
+seaborn
+joblib
+fastapi
+uvicorn[standard]
+streamlit
+tensorflow
+keras
+yfinance
+ta
+plotly
