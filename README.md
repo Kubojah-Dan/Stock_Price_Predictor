@@ -3,6 +3,8 @@
 A **production-grade machine learning trading system** built using Python, XGBoost, Streamlit, and Yahoo Finance data.  
 This project combines **data science, machine learning, backtesting, portfolio management, and live paper trading** into a single cohesive system.
 
+---
+
 <br/>
 
 ## 🚀 Key Features
@@ -11,6 +13,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
 - Historical OHLCV data downloaded directly from **Yahoo Finance**
 - Automatic caching & local storage
 - Multi-asset support (AAPL, MSFT, NVDA, GOOGL, etc.)
+
+---
 
 <br/>
 
@@ -26,6 +30,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
 - Walk-forward (rolling window) validation
 - Probability-based predictions
 
+---
+
 <br/>
 
 ### 🤖 Trading Logic
@@ -33,6 +39,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
 - **Probability thresholding** (trade only when confidence is high)
 - **Risk-aware position sizing** (capital + volatility aware)
 - Long-only strategy (safe default)
+
+---
 
 <br/>
 
@@ -46,6 +54,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
   - Timestamped trades
 - Real-time portfolio equity tracking
 
+---
+
 <br/>
 
 ### 📊 Backtesting & Metrics
@@ -57,6 +67,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
   - Sharpe Ratio
   - Sortino Ratio
 - Equity curve & drawdown analysis
+
+---
 
 <br/>
 
@@ -70,6 +82,8 @@ This project combines **data science, machine learning, backtesting, portfolio m
 
 All visualizations are saved as interactive HTML files.
 
+---
+
 <br/>
 
 ### 🖥️ Interactive Dashboard (Streamlit)
@@ -81,18 +95,45 @@ All visualizations are saved as interactive HTML files.
 - Trade history
 - Strategy analytics
 
+---
+
 <br/>
 
-### 1️⃣ Create virtual environment
+### ⚠️ Disclaimer
+
+## This project is for educational and research purposes only.
+## It is not financial advice and should not be used with real money without extensive testing.
+
+---
+
+<br/>
+
+### 👨‍💻 Author
+
+  Built with ❤️ by Kuboja Daniel
+
+  If you like this project, feel free to ⭐ the repository!
+
+---
+
+<br/>
+
+### Create virtual environment, Install Dependencies, Train models, and Launch the Dashboard
 ```bash
+1️⃣ Create virtual environment
 python -m venv .StockVenv
 source .StockVenv/bin/activate   # macOS/Linux
 .StockVenv\Scripts\activate      # Windows
 
-### 2️⃣ Install dependencies
+---
+
+2️⃣ Install dependencies
+
 pip install -r requirements.txt
 
-### 3️⃣ Train models (multi-asset)
+---
+
+3️⃣ Train models (multi-asset)
 python src/train_xgb_final.py
 
 
@@ -106,20 +147,7 @@ Save models, scalers, features
 
 Generate visualizations in outputs/
 
-### 4️⃣ Launch the dashboard
+---
+
+4️⃣ Launch the dashboard
 streamlit run streamlit_app/app.py
-
-<br/>
-
-### ⚠️ Disclaimer
-
-## This project is for educational and research purposes only.
-## It is not financial advice and should not be used with real money without extensive testing.
-
-<br/>
-
-### 👨‍💻 Author
-
-## Built with ❤️ by Kuboja Daniel
-
-## If you like this project, feel free to ⭐ the repository!
