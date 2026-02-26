@@ -2,12 +2,16 @@ import time
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import streamlit.components.v1 as components
+import os
 
 from src.preprocessing import load_and_save_yahoo
 from streamlit_app.utils import (
     load_artifacts,
+    load_regressor,
     prepare_data,
     predict_proba,
+    predict_returns,
     prob_to_signal,
     calculate_position_size,
     run_backtest
@@ -81,7 +85,7 @@ for ticker in tickers:
     # Load data
     # -------------------------------
     df_raw = load_data_cached(ticker, start_date)
-    df = prepare_data(df_raw)
+    df = prepare_data(df_raw, ticker=ticker, start_date=start_date)
 
     # -------------------------------
     # Load correct model PER TICKER
@@ -116,6 +120,25 @@ for ticker in tickers:
     st.write(f"🤖 Probability: **{latest_prob:.2f}**")
     st.write(f"📌 Signal: **{signal}**")
     st.write(f"📦 Suggested Size: **{size} shares**")
+
+    # -------------------------------
+    # Forecasts (1 / 10 / 30 days)
+    # -------------------------------
+    try:
+        reg_model, reg_meta = load_regressor(ticker)
+        from streamlit_app.utils import load_legacy_artifacts
+        _, reg_scaler, reg_features = load_legacy_artifacts(ticker)
+        preds = predict_returns(df, reg_model, reg_scaler, reg_features, horizons=(1, 10, 30), reg_meta=reg_meta)
+        forecast_rows = []
+        for h in (1, 10, 30):
+            forecast_rows.append({
+                "Horizon (days)": h,
+                "Expected Return": f"{preds[h]['cum_return']*100:.2f}%",
+                "Forecast Price": f"{preds[h]['price']:.2f}"
+            })
+        st.table(pd.DataFrame(forecast_rows))
+    except Exception as e:
+        st.info(f"Forecast unavailable: {e}")
 
     # -------------------------------
     # Auto-trade (per ticker candle)
@@ -217,6 +240,41 @@ fig_dd.add_trace(go.Scatter(
 ))
 fig_dd.update_layout(template="plotly_dark")
 st.plotly_chart(fig_dd, width="stretch")
+
+# =====================================================
+# Saved Metrics & Plots
+# =====================================================
+st.subheader("📑 Saved Metrics & Reports")
+for ticker in tickers:
+    st.markdown(f"#### {ticker}")
+    metrics_path = f"outputs/{ticker}_improved_metrics.csv"
+    if not os.path.exists(metrics_path):
+        metrics_path = f"outputs/{ticker}_metrics.csv"
+        
+    if os.path.exists(metrics_path):
+        st.dataframe(pd.read_csv(metrics_path))
+    else:
+        st.info("Metrics file not found.")
+
+    html_reports = []
+    if os.path.exists(f"outputs/{ticker}_equity_test.html"):
+        html_reports.append(("Equity Curve (test)", f"outputs/{ticker}_equity_test.html", 450))
+    if os.path.exists(f"outputs/{ticker}_conf_vs_return_test.html"):
+        html_reports.append(("Confidence vs Return", f"outputs/{ticker}_conf_vs_return_test.html", 450))
+        
+    if os.path.exists(f"outputs/{ticker}_improved_fi.html"):
+        html_reports.append(("Feature Importance (Improved)", f"outputs/{ticker}_improved_fi.html", 500))
+    elif os.path.exists(f"outputs/{ticker}_fi.html"):
+        html_reports.append(("Feature Importance", f"outputs/{ticker}_fi.html", 450))
+        
+    for title, path, height in html_reports:
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8") as f:
+                html_str = f.read()
+            with st.expander(f"{title}"):
+                components.html(html_str, height=height, scrolling=True)
+        else:
+            st.info(f"{title} not found.")
 
 # =====================================================
 # Auto refresh

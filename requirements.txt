@@ -14,3 +14,10 @@ keras
 yfinance
 ta
 plotly
+pandas_datareader
+newsapi-python
+vaderSentiment
+scikit-learn
+statsmodels
+python-dotenv
+optuna

@@ -1,0 +1,158 @@
+Processing AAPL with Improved Stacking Pipeline...
+Yahoo data saved to data/AAPL_yahoo.csv
+Loaded raw data: 2798 rows
+After features: 2798 rows
+After target: 2793 rows
+Dropped 0 rows with NaNs/Infs.
+Initial feature count: 39
+Running feature selection...
+Selected 20 features: ['sma_5', 'sma_10', 'sma_20', 'sma_50', 'sma_200', 'ema_12', 'ema_26', 'macd', 'rsi_14', 'bb_upper', 'bb_lower', 'atr_14', 'momentum_10', 'ichimoku_conv', 'ichimoku_base', 'ichimoku_span_a', 'ichimoku_span_b', 'stoch_k', 'stoch_d', 'macro_CPI']
+Training Stacking Ensemble (Manual TimeSeriesSplit)...
+Generating meta-features via TimeSeriesSplit...
+  Fold 0 xgb AUC: 0.4374
+  Fold 0 rf AUC: 0.4812
+  Fold 0 et AUC: 0.5391
+  Fold 1 xgb AUC: 0.4945
+  Fold 1 rf AUC: 0.5257
+  Fold 1 et AUC: 0.4862
+  Fold 2 xgb AUC: 0.4151
+  Fold 2 rf AUC: 0.4110
+  Fold 2 et AUC: 0.4596
+  Fold 3 xgb AUC: 0.4885
+  Fold 3 rf AUC: 0.5672
+  Fold 3 et AUC: 0.5680
+  Fold 4 xgb AUC: 0.5504
+  Fold 4 rf AUC: 0.4874
+  Fold 4 et AUC: 0.5252
+Meta-training set size: (1975, 3)
+Retraining base models on full training set...
+------------------------------
+Results for AAPL:
+acc: 0.5394
+bal_acc: 0.5000
+precision: 0.5394
+recall: 1.0000
+f1: 0.7008
+auc: 0.4757
+mcc: 0.0000
+log_loss: 0.7017
+------------------------------
+Processing MSFT with Improved Stacking Pipeline...
+Yahoo data saved to data/MSFT_yahoo.csv
+Loaded raw data: 2798 rows
+After features: 2798 rows
+After target: 2793 rows
+Dropped 0 rows with NaNs/Infs.
+Initial feature count: 39
+Running feature selection...
+Selected 20 features: ['return_1d', 'sma_5', 'sma_10', 'sma_20', 'sma_50', 'sma_200', 'ema_12', 'macd', 'rsi_14', 'bb_upper', 'bb_lower', 'atr_14', 'volatility_20', 'ichimoku_conv', 'ichimoku_span_a', 'ichimoku_span_b', 'stoch_k', 'stoch_d', 'vol_lag_5', 'macro_CPI']
+Training Stacking Ensemble (Manual TimeSeriesSplit)...
+Generating meta-features via TimeSeriesSplit...
+  Fold 0 xgb AUC: 0.4448
+  Fold 0 rf AUC: 0.4724
+  Fold 0 et AUC: 0.3507
+  Fold 1 xgb AUC: 0.5619
+  Fold 1 rf AUC: 0.5555
+  Fold 1 et AUC: 0.5446
+  Fold 2 xgb AUC: 0.5349
+  Fold 2 rf AUC: 0.5294
+  Fold 2 et AUC: 0.5330
+  Fold 3 xgb AUC: 0.5088
+  Fold 3 rf AUC: 0.5670
+  Fold 3 et AUC: 0.5315
+  Fold 4 xgb AUC: 0.4861
+  Fold 4 rf AUC: 0.5252
+  Fold 4 et AUC: 0.5205
+Meta-training set size: (1975, 3)
+Retraining base models on full training set...
+------------------------------
+Results for MSFT:
+acc: 0.5513
+bal_acc: 0.5000
+precision: 0.5513
+recall: 1.0000
+f1: 0.7108
+auc: 0.5143
+mcc: 0.0000
+log_loss: 0.6918
+------------------------------
+Processing NVDA with Improved Stacking Pipeline...
+Yahoo data saved to data/NVDA_yahoo.csv
+Loaded raw data: 2798 rows
+After features: 2798 rows
+After target: 2793 rows
+Dropped 0 rows with NaNs/Infs.
+Initial feature count: 39
+Running feature selection...
+Selected 20 features: ['log_return', 'sma_5', 'sma_10', 'sma_20', 'sma_50', 'sma_200', 'ema_12', 'ema_26', 'macd', 'bb_upper', 'bb_lower', 'atr_14', 'volatility_20', 'ichimoku_conv', 'ichimoku_base', 'ichimoku_span_a', 'ichimoku_span_b', 'stoch_d', 'macro_CPI', 'macro_10Y_Treasury']
+Training Stacking Ensemble (Manual TimeSeriesSplit)...
+Generating meta-features via TimeSeriesSplit...
+  Fold 0 xgb AUC: 0.4943
+  Fold 0 rf AUC: 0.4816
+  Fold 0 et AUC: 0.5145
+  Fold 1 xgb AUC: 0.5226
+  Fold 1 rf AUC: 0.4826
+  Fold 1 et AUC: 0.4942
+  Fold 2 xgb AUC: 0.5767
+  Fold 2 rf AUC: 0.6021
+  Fold 2 et AUC: 0.5763
+  Fold 3 xgb AUC: 0.5612
+  Fold 3 rf AUC: 0.4988
+  Fold 3 et AUC: 0.5137
+  Fold 4 xgb AUC: 0.5248
+  Fold 4 rf AUC: 0.5522
+  Fold 4 et AUC: 0.5574
+Meta-training set size: (1975, 3)
+Retraining base models on full training set...
+------------------------------
+Results for NVDA:
+acc: 0.5561
+bal_acc: 0.5000
+precision: 0.5561
+recall: 1.0000
+f1: 0.7147
+auc: 0.4230
+mcc: 0.0000
+log_loss: 0.7017
+------------------------------
+Processing GOOGL with Improved Stacking Pipeline...
+Yahoo data saved to data/GOOGL_yahoo.csv
+Loaded raw data: 2799 rows
+After features: 2799 rows
+After target: 2794 rows
+Dropped 0 rows with NaNs/Infs.
+Initial feature count: 39
+Running feature selection...
+Selected 20 features: ['return_1d', 'sma_5', 'sma_10', 'sma_20', 'sma_200', 'ema_12', 'ema_26', 'macd', 'rsi_14', 'vol_change', 'bb_lower', 'atr_14', 'volatility_20', 'momentum_10', 'ichimoku_conv', 'stoch_k', 'stoch_d', 'vol_lag_2', 'macro_CPI', 'macro_10Y_Treasury']
+Training Stacking Ensemble (Manual TimeSeriesSplit)...
+Generating meta-features via TimeSeriesSplit...
+  Fold 0 xgb AUC: 0.5198
+  Fold 0 rf AUC: 0.4966
+  Fold 0 et AUC: 0.5703
+  Fold 1 xgb AUC: 0.6125
+  Fold 1 rf AUC: 0.6088
+  Fold 1 et AUC: 0.6152
+  Fold 2 xgb AUC: 0.4701
+  Fold 2 rf AUC: 0.4972
+  Fold 2 et AUC: 0.5178
+  Fold 3 xgb AUC: 0.5057
+  Fold 3 rf AUC: 0.4788
+  Fold 3 et AUC: 0.5524
+  Fold 4 xgb AUC: 0.5038
+  Fold 4 rf AUC: 0.5019
+  Fold 4 et AUC: 0.5119
+Meta-training set size: (1975, 3)
+Retraining base models on full training set...
+------------------------------
+Results for GOOGL:
+acc: 0.5714
+bal_acc: 0.5000
+precision: 0.5714
+recall: 1.0000
+f1: 0.7273
+auc: 0.5259
+mcc: 0.0000
+log_loss: 0.6825
+------------------------------
+
+Training complete. Models saved to models_improved, metrics to outputs

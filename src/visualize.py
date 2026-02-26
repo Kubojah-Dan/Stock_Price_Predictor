@@ -6,20 +6,26 @@ import numpy as np
 import os
 import webbrowser
 
+AUTO_OPEN_PLOTS = os.getenv("AUTO_OPEN_PLOTS", "0") == "1"
+
 def _open(fig, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     fig.write_html(path)
-    webbrowser.open(f"file:///{os.path.abspath(path)}")
-    print(f"📊 Opened: {path}")
+    if AUTO_OPEN_PLOTS:
+        try:
+            webbrowser.open(f"file:///{os.path.abspath(path)}")
+            print(f"Opened: {path}")
+        except Exception as e:
+            print(f"Could not auto-open {path}: {e}")
     
 def plot_equity_curve(df, save_path="outputs/equity_curve.html"):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        x=df["Date"], y=df["cum_strategy"], name="Strategy"
+        x=df.index, y=df["cum_strategy"], name="Strategy"
     ))
     fig.add_trace(go.Scatter(
-        x=df["Date"], y=df["cum_market"], name="Market"
+        x=df.index, y=df["cum_market"], name="Market"
     ))
 
     fig.update_layout(
@@ -28,7 +34,7 @@ def plot_equity_curve(df, save_path="outputs/equity_curve.html"):
     )
 
     fig.write_html(save_path)
-    print(f"📊 Visualization saved to {save_path}")
+    print(f"Visualization saved to {save_path}")
 
     #fig.show()
     _open(fig, save_path)
@@ -42,7 +48,7 @@ def plot_drawdown(df, save_path="outputs/drawdown.html"):
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=df["Date"],
+        x=df.index,
         y=drawdown,
         fill="tozeroy",
         name="Drawdown",
@@ -91,14 +97,14 @@ def plot_trades(df, save_path="outputs/trades.html"):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        x=df["Date"],
+        x=df.index,
         y=df["Close"],
         name="Price",
         line=dict(color="lightblue")
     ))
 
     fig.add_trace(go.Scatter(
-        x=buys["Date"],
+        x=buys.index,
         y=buys["Close"],
         mode="markers",
         marker=dict(color="green", size=6),
@@ -106,7 +112,7 @@ def plot_trades(df, save_path="outputs/trades.html"):
     ))
 
     fig.add_trace(go.Scatter(
-        x=sells["Date"],
+        x=sells.index,
         y=sells["Close"],
         mode="markers",
         marker=dict(color="red", size=6),

@@ -1,0 +1,2 @@
+acc,bal_acc,precision,recall,f1,auc,mcc,log_loss,model,ticker
+0.5393794749403341,0.5,0.5393794749403341,1.0,0.7007751937984497,0.47567517997157144,0.0,0.701713995490317,StackingEnsemble_Improved,AAPL

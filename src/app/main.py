@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import numpy as np
-from app.model_loader import load_xgb_final
+from .model_loader import load_xgb_final
 
 app = FastAPI()
 
