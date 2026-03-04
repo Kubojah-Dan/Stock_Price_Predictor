@@ -43,6 +43,12 @@ Thumbs.db
 data/*.csv
 outputs/*.html
 notebooks/*.ipynb
+models/*.pkl
+models_improved/*.pkl
+models_improved/*.joblib
+models_improved/*.pt
+models_improved/*.h5
+
 
 # ======================
 # Models (optional: keep or ignore)
