@@ -141,10 +141,19 @@ def add_features(df, ticker=None, start_date=None):
                 s = daily_sentiment_for_ticker(ticker, d)
             except Exception:
                 s = 0.0
-            sentiments.append(s)
+            sentiments.append(float(s))
         df["sentiment"] = sentiments
+        # Add sentiment lags and rolling averages
+        df["sentiment_lag1"] = df["sentiment"].shift(1)
+        df["sentiment_lag2"] = df["sentiment"].shift(2)
+        df["sentiment_sma5"] = df["sentiment"].rolling(5).mean()
+        df["sentiment_sma10"] = df["sentiment"].rolling(10).mean()
     else:
         df["sentiment"] = 0.0
+        df["sentiment_lag1"] = 0.0
+        df["sentiment_lag2"] = 0.0
+        df["sentiment_sma5"] = 0.0
+        df["sentiment_sma10"] = 0.0
 
     # Final cleaning: ensure NO NaNs remain
     df = df.ffill().bfill().fillna(0.0)

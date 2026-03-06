@@ -1,11 +1,4 @@
 
----
-
-# 🚫 `.gitignore`
-
-This `.gitignore` is tailored **exactly** for your project.
-
-```gitignore
 # ======================
 # Python
 # ======================
@@ -53,11 +46,6 @@ models_clf/
 models/
 *.csv
 *.pkl
-
-# ======================
-# Models (optional: keep or ignore)
-# Uncomment if you DON'T want models on GitHub
-# models/*.pkl
 
 # ======================
 # Logs
