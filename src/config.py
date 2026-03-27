@@ -1,7 +1,6 @@
-TICKER = "AAPL"
-START_DATE = "2015-01-01"
-TEST_SIZE = 0.2
+TICKERS     = ["AAPL", "MSFT", "NVDA", "GOOGL"]
+START_DATE  = "2015-01-01"
+CLF_HORIZON = 5
+MODELS_DIR  = "models"
+OUTPUT_DIR  = "outputs"
 RANDOM_STATE = 42
-MODELS_DIR = "models"
-
-

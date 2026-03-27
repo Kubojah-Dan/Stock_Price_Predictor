@@ -1,2 +1,0 @@
-acc,bal_acc,precision,recall,f1,auc,mcc,log_loss,model,ticker
-0.5558194774346793,0.5,0.5558194774346793,1.0,0.7145038167938931,0.44926641985465515,0.0,0.6881303419356971,StackingEnsemble_Improved,NVDA

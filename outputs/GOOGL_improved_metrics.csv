@@ -1,2 +1,0 @@
-acc,bal_acc,precision,recall,f1,auc,mcc,log_loss,model,ticker
-0.5676959619952494,0.5,0.5676959619952494,1.0,0.7242424242424242,0.5226217297347004,0.0,0.683596748583772,StackingEnsemble_Improved,GOOGL

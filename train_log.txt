@@ -1,0 +1,160 @@
+
+==================================================
+  Training: AAPL
+==================================================
+Yahoo data saved to data/AAPL_yahoo.csv
+  Raw features : 50
+  Total rows   : 2803
+  Class balance: 62.29% Up
+  Selecting features...
+  Selected 25 features: ['ret_21d', 'vol_21d', 'vol_63d', 'vol_ratio', 'price_sma20_ratio', 'price_sma50_ratio', 'price_sma200_ratio', 'sma20_sma50_ratio', 'macd', 'macd_signal', 'macd_hist', 'rsi_21', 'bb_pct', 'bb_width', 'atr_pct', 'adx', 'plus_di_minus_di', 'ichimoku_base_ratio', 'ichimoku_cb_diff', 'obv_change', 'mom_1m_3m', 'macro_CPI', 'macro_UNRATE', 'macro_FFR', 'macro_10Y_Treasury']
+  Running Optuna (50 trials)...
+  Best params: {'n_estimators': 406, 'max_depth': 5, 'learning_rate': 0.07564327925838676, 'subsample': 0.8923645209213664, 'colsample_bytree': 0.8841726785703334, 'min_child_weight': 1, 'gamma': 0.035850102299805224, 'reg_alpha': 0.942961478422139, 'reg_lambda': 2.1424448330667842, 'eval_metric': 'auc', 'use_label_encoder': False, 'verbosity': 0, 'random_state': 42, 'n_jobs': -1}
+  Optimal threshold (val): 0.55
+
+  -- Holdout Metrics --
+  threshold      : 0.5500
+  accuracy       : 0.4403
+  bal_accuracy   : 0.4781
+  precision      : 0.5506
+  recall         : 0.2636
+  f1             : 0.3566
+  auc            : 0.4677
+  mcc            : -0.0478
+  log_loss       : 0.7099
+
+  Running walk-forward evaluation...
+  Walk-forward AUC: 0.4800 | Acc: 0.5107 | BalAcc: 0.5081
+  Per-fold AUCs   : ['0.754', '0.389', '0.545', '0.649', '0.528']
+  Saved artifacts -> models/
+Saved: outputs\AAPL_feature_importance.html
+Saved: outputs\AAPL_roc.html
+Saved: outputs\AAPL_confusion.html
+Saved: outputs\AAPL_calibration.html
+Saved: outputs\AAPL_walk_forward.html
+  Backtest -> Sharpe: 0.80  Sortino: 0.71  Return: 21.28%
+Saved: outputs\AAPL_equity.html
+Saved: outputs\AAPL_drawdown.html
+
+==================================================
+  Training: MSFT
+==================================================
+Yahoo data saved to data/MSFT_yahoo.csv
+  Raw features : 50
+  Total rows   : 2803
+  Class balance: 63.86% Up
+  Selecting features...
+  Selected 25 features: ['ret_10d', 'ret_21d', 'vol_21d', 'vol_63d', 'vol_ratio', 'price_sma20_ratio', 'price_sma50_ratio', 'price_sma200_ratio', 'sma20_sma50_ratio', 'macd', 'macd_signal', 'macd_hist', 'bb_width', 'atr_pct', 'adx', 'plus_di_minus_di', 'ichimoku_conv_ratio', 'ichimoku_base_ratio', 'ichimoku_cb_diff', 'obv_change', 'mom_1m_3m', 'macro_CPI', 'macro_UNRATE', 'macro_FFR', 'macro_10Y_Treasury']
+  Running Optuna (50 trials)...
+  Best params: {'n_estimators': 666, 'max_depth': 5, 'learning_rate': 0.03874062693290535, 'subsample': 0.7362122003162769, 'colsample_bytree': 0.9158840279963768, 'min_child_weight': 9, 'gamma': 0.31624614592986533, 'reg_alpha': 0.40833356105622876, 'reg_lambda': 0.8952591739612361, 'eval_metric': 'auc', 'use_label_encoder': False, 'verbosity': 0, 'random_state': 42, 'n_jobs': -1}
+  Optimal threshold (val): 0.57
+
+  -- Holdout Metrics --
+  threshold      : 0.5700
+  accuracy       : 0.4991
+  bal_accuracy   : 0.5005
+  precision      : 0.5157
+  recall         : 0.4533
+  f1             : 0.4825
+  auc            : 0.4991
+  mcc            : 0.0011
+  log_loss       : 0.7101
+
+  Running walk-forward evaluation...
+  Walk-forward AUC: 0.4910 | Acc: 0.4705 | BalAcc: 0.4628
+  Per-fold AUCs   : ['0.532', '0.401', '0.678', '0.517', '0.308']
+  Saved artifacts -> models/
+Saved: outputs\MSFT_feature_importance.html
+Saved: outputs\MSFT_roc.html
+Saved: outputs\MSFT_confusion.html
+Saved: outputs\MSFT_calibration.html
+Saved: outputs\MSFT_walk_forward.html
+  Backtest -> Sharpe: 0.26  Sortino: 0.33  Return: 7.56%
+Saved: outputs\MSFT_equity.html
+Saved: outputs\MSFT_drawdown.html
+
+==================================================
+  Training: NVDA
+==================================================
+Yahoo data saved to data/NVDA_yahoo.csv
+  Raw features : 50
+  Total rows   : 2803
+  Class balance: 66.71% Up
+  Selecting features...
+  Selected 25 features: ['ret_10d', 'ret_21d', 'vol_21d', 'vol_63d', 'vol_ratio', 'price_sma20_ratio', 'price_sma50_ratio', 'price_sma200_ratio', 'sma20_sma50_ratio', 'macd', 'macd_signal', 'macd_hist', 'rsi_14', 'rsi_21', 'bb_width', 'atr_pct', 'adx', 'plus_di_minus_di', 'ichimoku_base_ratio', 'ichimoku_cb_diff', 'mom_1m_3m', 'macro_CPI', 'macro_UNRATE', 'macro_FFR', 'macro_10Y_Treasury']
+  Running Optuna (50 trials)...
+  Best params: {'n_estimators': 277, 'max_depth': 6, 'learning_rate': 0.012377641723151289, 'subsample': 0.9568193644231222, 'colsample_bytree': 0.7590880983254454, 'min_child_weight': 1, 'gamma': 0.3447849613312406, 'reg_alpha': 0.16217468570771462, 'reg_lambda': 1.4962159028014792, 'eval_metric': 'auc', 'use_label_encoder': False, 'verbosity': 0, 'random_state': 42, 'n_jobs': -1}
+  Optimal threshold (val): 0.56
+
+  -- Holdout Metrics --
+  threshold      : 0.5600
+  accuracy       : 0.5633
+  bal_accuracy   : 0.4665
+  precision      : 0.6146
+  recall         : 0.8310
+  f1             : 0.7066
+  auc            : 0.4691
+  mcc            : -0.0920
+  log_loss       : 0.6624
+
+  Running walk-forward evaluation...
+  Walk-forward AUC: 0.4544 | Acc: 0.4670 | BalAcc: 0.4468
+  Per-fold AUCs   : ['0.588', '0.284', '0.596', '0.632', '0.562']
+  Saved artifacts -> models/
+Saved: outputs\NVDA_feature_importance.html
+Saved: outputs\NVDA_roc.html
+Saved: outputs\NVDA_confusion.html
+Saved: outputs\NVDA_calibration.html
+Saved: outputs\NVDA_walk_forward.html
+  Backtest -> Sharpe: 1.40  Sortino: 2.02  Return: 251.03%
+Saved: outputs\NVDA_equity.html
+Saved: outputs\NVDA_drawdown.html
+
+==================================================
+  Training: GOOGL
+==================================================
+Yahoo data saved to data/GOOGL_yahoo.csv
+  Raw features : 50
+  Total rows   : 2803
+  Class balance: 63.43% Up
+  Selecting features...
+  Selected 25 features: ['ret_5d', 'vol_21d', 'vol_63d', 'vol_ratio', 'price_sma20_ratio', 'price_sma50_ratio', 'price_sma200_ratio', 'sma20_sma50_ratio', 'macd', 'macd_signal', 'macd_hist', 'rsi_14', 'bb_width', 'atr_pct', 'adx', 'plus_di_minus_di', 'ichimoku_conv_ratio', 'ichimoku_base_ratio', 'ichimoku_cb_diff', 'obv_change', 'mom_1m_3m', 'macro_CPI', 'macro_UNRATE', 'macro_FFR', 'macro_10Y_Treasury']
+  Running Optuna (50 trials)...
+  Best params: {'n_estimators': 425, 'max_depth': 7, 'learning_rate': 0.060285631437218844, 'subsample': 0.8394633936788146, 'colsample_bytree': 0.5780093202212182, 'min_child_weight': 2, 'gamma': 0.05808361216819946, 'reg_alpha': 1.7323522915498704, 'reg_lambda': 2.002787529358022, 'eval_metric': 'auc', 'use_label_encoder': False, 'verbosity': 0, 'random_state': 42, 'n_jobs': -1}
+  Optimal threshold (val): 0.51
+
+  -- Holdout Metrics --
+  threshold      : 0.5100
+  accuracy       : 0.5936
+  bal_accuracy   : 0.5041
+  precision      : 0.6833
+  recall         : 0.7513
+  f1             : 0.7157
+  auc            : 0.4959
+  mcc            : 0.0089
+  log_loss       : 0.7062
+
+  Running walk-forward evaluation...
+  Walk-forward AUC: 0.4043 | Acc: 0.4616 | BalAcc: 0.4433
+  Per-fold AUCs   : ['0.560', '0.523', '0.554', '0.332', '0.679']
+  Saved artifacts -> models/
+Saved: outputs\GOOGL_feature_importance.html
+Saved: outputs\GOOGL_roc.html
+Saved: outputs\GOOGL_confusion.html
+Saved: outputs\GOOGL_calibration.html
+Saved: outputs\GOOGL_walk_forward.html
+  Backtest -> Sharpe: 0.00  Sortino: nan  Return: 0.00%
+Saved: outputs\GOOGL_equity.html
+Saved: outputs\GOOGL_drawdown.html
+
+==================================================
+SUMMARY
+==================================================
+ticker  accuracy  bal_accuracy       f1      auc       mcc   wf_auc
+  AAPL  0.440285      0.478139 0.356557 0.467703 -0.047840 0.479966
+  MSFT  0.499109      0.500541 0.482505 0.499084  0.001086 0.491007
+  NVDA  0.563280      0.466464 0.706587 0.469076 -0.091987 0.454374
+ GOOGL  0.593583      0.504146 0.715711 0.495942  0.008910 0.404283
+
+Outputs -> outputs/
+Models  -> models/
