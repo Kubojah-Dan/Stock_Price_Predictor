@@ -1,38 +1,26 @@
 
-# ======================
 # Python
-# ======================
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
-# ======================
 # Virtual Environments
-# ======================
 .StockVenv/
 venv/
 env/
 
-# ======================
 # Jupyter
-# ======================
 .ipynb_checkpoints/
 
-# ======================
 # VS Code
-# ======================
 .vscode/
 
-# ======================
 # OS files
-# ======================
 .DS_Store
 Thumbs.db
 
-# ======================
-# Data & Outputs (large / reproducible)
-# ======================
+# Data & Outputs 
 data/*.csv
 outputs/*.html
 outputs/
@@ -47,18 +35,14 @@ models/
 *.csv
 *.pkl
 
-# ======================
 # Logs
-# ======================
 *.log
 
-# ======================
 # Streamlit cache
-# ======================
 .streamlit/
 
-# ======================
-# Secrets (future broker keys)
-# ======================
+# Secrets 
 .env
 .env.*
+
+.sfdx/*

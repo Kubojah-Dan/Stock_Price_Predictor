@@ -1,13 +1,3 @@
-"""
-Improved training pipeline:
-- Stationary ratio-based features
-- Optuna hyperparameter tuning (XGBoost) with TimeSeriesSplit CV
-- Forced class balancing via sample_weight (not scale_pos_weight)
-- Optimal threshold selection on validation set
-- Isotonic probability calibration
-- Walk-forward out-of-sample evaluation
-- Full visualisation suite
-"""
 import os
 import sys
 import warnings

@@ -94,7 +94,7 @@ All features are **stationary and ratio-based** (no raw price levels) to be suit
 
 ---
 
-### Visualisations (Plotly — interactive HTML)
+### Visualisations
 
 All saved to `outputs/` per ticker:
 
@@ -155,23 +155,7 @@ Models trained on 2015–present data for AAPL, MSFT, NVDA, GOOGL (21-day horizo
 | MSFT   | 49.9%    | 50.1%         | 0.483 | 0.499 | +7.6%   | 0.26 |
 | AAPL   | 44.0%    | 47.8%         | 0.357 | 0.468 | +21.3%  | 0.80 |
 
-**Note:** Balanced accuracy near 50% is the honest benchmark — it means the model is not simply predicting one class. Walk-forward fold AUCs range from 0.28 to 0.75, reflecting that signal exists in certain market regimes but is not consistent across all periods. NVDA's backtest return of +251% reflects the strong trend-following signal captured during its 2023–2024 bull run.
-
----
-
-## What Changed (vs Previous Version)
-
-| Area | Before | After |
-|---|---|---|
-| Features | Raw SMA/EMA price levels (non-stationary) | Ratio-based, normalised, stationary features |
-| Prediction horizon | 5-day | 21-day (more persistent signal) |
-| Class balance | `scale_pos_weight` (broken for bull market) | `compute_sample_weight("balanced")` |
-| Hyperparameters | Fixed defaults | Optuna 50-trial AUC-optimised search |
-| Probability calibration | None | Isotonic calibration (`CalibratedClassifierCV`) |
-| Threshold selection | Fixed 0.5 or searched on test set (leakage) | Tuned on validation split only |
-| Visualisations | Duplicate functions, broken `plot_confidence_vs_return` | 7 clean functions, calibration + walk-forward plots added |
-| Model directories | 3 dirs: `models/`, `models_clf/`, `models_improved/` | Single `models/` directory |
-| Training scripts | 8 overlapping scripts | Single `src/train_improved.py` |
+**Note:**  Walk-forward fold AUCs range from 0.28 to 0.75, reflecting that signal exists in certain market regimes but is not consistent across all periods. NVDA's backtest return of +251% reflects the strong trend-following signal captured during its 2023–2024 bull run.
 
 ---
 
