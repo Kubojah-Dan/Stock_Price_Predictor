@@ -37,9 +37,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 portfolio = {
     "cash": 100000.0,
     "equity": 100000.0,
-    "positions": {},
+    "positions": {}, # {ticker: {qty: 10, avg_price: 150.0}}
     "trades": []
 }
+auto_trade_enabled = False
 
 # ── Auth Models & Dependencies ──────────────────────────────────────────────────
 
@@ -128,6 +129,59 @@ async def broker_status(user: dict = Depends(get_current_user)):
     positions = broker.get_positions()
     return {"status": "connected", "info": info, "positions": positions}
 
+# ── Paper Trading Endpoints ───────────────────────────────────────────────────
+
+@app.get("/api/portfolio")
+async def get_portfolio():
+    # Update equity based on latest prices (simple estimate)
+    total_equity = portfolio["cash"]
+    for ticker, pos in portfolio["positions"].items():
+        try:
+            current_price = load_and_save_yahoo(ticker, "2024-01-01").iloc[-1]["Close"]
+            total_equity += pos["qty"] * current_price
+        except:
+            total_equity += pos["qty"] * pos["avg_price"]
+    portfolio["equity"] = round(total_equity, 2)
+    return {**portfolio, "auto_trade": auto_trade_enabled}
+
+@app.post("/api/portfolio/reset")
+async def reset_portfolio():
+    global portfolio
+    portfolio = {"cash": 100000.0, "equity": 100000.0, "positions": {}, "trades": []}
+    return {"message": "Portfolio reset"}
+
+@app.post("/api/portfolio/auto-trade")
+async def toggle_auto_trade(enabled: bool):
+    global auto_trade_enabled
+    auto_trade_enabled = enabled
+    return {"auto_trade": auto_trade_enabled}
+
+def execute_paper_trade(ticker, signal, price):
+    global portfolio
+    qty = 10 # Default fixed size for paper trading
+    
+    if signal == "BUY":
+        cost = qty * price
+        if portfolio["cash"] >= cost:
+            portfolio["cash"] -= cost
+            pos = portfolio["positions"].get(ticker, {"qty": 0, "avg_price": 0})
+            new_qty = pos["qty"] + qty
+            new_avg = (pos["qty"] * pos["avg_price"] + cost) / new_qty
+            portfolio["positions"][ticker] = {"qty": new_qty, "avg_price": new_avg}
+            portfolio["trades"].append({"ticker": ticker, "type": "BUY", "qty": qty, "price": price, "date": str(pd.Timestamp.now())})
+            return True
+    elif signal == "SELL":
+        pos = portfolio["positions"].get(ticker, {"qty": 0})
+        if pos["qty"] >= qty:
+            revenue = qty * price
+            portfolio["cash"] += revenue
+            pos["qty"] -= qty
+            if pos["qty"] == 0:
+                del portfolio["positions"][ticker]
+            portfolio["trades"].append({"ticker": ticker, "type": "SELL", "qty": qty, "price": price, "date": str(pd.Timestamp.now())})
+            return True
+    return False
+
 # ── ML Models ──────────────────────────────────────────────────────────────────
 
 class StackingWrapper:
@@ -181,7 +235,15 @@ def get_df(ticker):
 
 def get_prediction(ticker, threshold, df):
     model, scaler, features, model_type = load_model(ticker)
-    latest_price = float(df["Close"].iloc[-1])
+    
+    # Try to get live price from MT5 first
+    live_price = broker.get_symbol_price(ticker)
+    if live_price:
+        latest_price = float(live_price)
+        print(f"Using MT5 live price for {ticker}: {latest_price}")
+    else:
+        latest_price = float(df["Close"].iloc[-1])
+        
     returns = df["Close"].pct_change()
 
     if model is not None:
@@ -286,6 +348,14 @@ async def get_trend_plot(ticker: str):
                 high=df['High'],
                 low=df['Low'],
                 close=df['Close'])])
+        
+        # Add live price marker if connected
+        live_price = broker.get_symbol_price(ticker)
+        if live_price:
+            fig.add_trace(go.Scatter(x=[df['Date'].iloc[-1]], y=[live_price], mode="markers+text", 
+                                     name="Live Price", text=[f"${live_price:.2f}"], 
+                                     textposition="top right", marker=dict(color='white', size=10)))
+
         fig.update_layout(title=f"{ticker} Recent Trend", template="plotly_dark", xaxis_rangeslider_visible=False)
         
         path = f"outputs/{ticker}_trend.html"
@@ -299,7 +369,13 @@ async def get_trend_plot(ticker: str):
 async def predict(ticker: str, threshold: float = 0.60):
     try:
         df = get_df(ticker)
-        return get_prediction(ticker, threshold, df)
+        res = get_prediction(ticker, threshold, df)
+        
+        # Auto-trade logic
+        if auto_trade_enabled and res["signal"] in ["BUY", "SELL"]:
+            execute_paper_trade(ticker, res["signal"], res["price"])
+            
+        return res
     except Exception as e:
         import traceback; traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
@@ -316,6 +392,11 @@ async def agent_chat(ticker: str, threshold: float = 0.60, user: dict = Depends(
         for d, r in recent.iterrows():
             trend_summary.append(f"{str(d.date())}: O:{r['Open']:.2f} H:{r['High']:.2f} L:{r['Low']:.2f} C:{r['Close']:.2f}")
         
+        # Append live entry
+        live_p = broker.get_symbol_price(ticker)
+        if live_p:
+            trend_summary.append(f"LIVE (MT5): {live_p:.2f}")
+
         pred["trend_context"] = "\n".join(trend_summary)
         
         reasoning = get_agent_decision(pred)

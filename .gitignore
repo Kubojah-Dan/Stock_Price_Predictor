@@ -48,3 +48,4 @@ models/
 .sfdx/*
 dataset_description.txt
 scratch/
+WALKTHROUGH.md

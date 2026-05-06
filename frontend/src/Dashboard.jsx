@@ -70,6 +70,7 @@ export default function Dashboard() {
 
   const [loading, setLoading] = useState(false);
   const [threshold, setThreshold] = useState(0.60);
+  const [paperPortfolio, setPaperPortfolio] = useState({ cash: 100000, equity: 100000, positions: {}, auto_trade: false });
   const navigate = useNavigate();
   const mainRef = useRef(null);
 
@@ -84,12 +85,27 @@ export default function Dashboard() {
   useEffect(() => {
     gsap.fromTo(mainRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
     loadBrokerStatus();
+    loadPaperPortfolio();
   }, []);
+
+  // Separate Effect for Auto-refresh to handle ticker changes correctly
+  useEffect(() => {
+    // Immediate load on ticker change
+    loadAll();
+    loadBrokerStatus();
+
+    const interval = setInterval(() => {
+      console.log(`Auto-refreshing data for ${ticker}...`);
+      loadAll();
+      loadBrokerStatus();
+    }, 15000);
+    
+    return () => clearInterval(interval);
+  }, [ticker, threshold]); // Reset interval if ticker or threshold changes
 
   const [trendUrl, setTrendUrl] = useState('');
 
   useEffect(() => {
-    loadAll();
     loadTrend();
   }, [ticker]);
 
@@ -106,6 +122,37 @@ export default function Dashboard() {
   const loadAll = () => {
     loadMetrics();
     loadPrediction();
+    loadPaperPortfolio();
+  };
+
+  const loadPaperPortfolio = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/api/portfolio');
+      const data = await res.json();
+      setPaperPortfolio(data);
+    } catch (e) {
+      console.error('Portfolio error', e);
+    }
+  };
+
+  const toggleAutoTrade = async (val) => {
+    try {
+      const res = await fetch(`http://localhost:8000/api/portfolio/auto-trade?enabled=${val}`, { method: 'POST' });
+      const data = await res.json();
+      setPaperPortfolio({ ...paperPortfolio, auto_trade: data.auto_trade });
+    } catch (e) {
+      console.error('Auto-trade toggle error', e);
+    }
+  };
+
+  const resetPaperPortfolio = async () => {
+    if (!window.confirm("Reset paper trading portfolio?")) return;
+    try {
+      await fetch('http://localhost:8000/api/portfolio/reset', { method: 'POST' });
+      loadPaperPortfolio();
+    } catch (e) {
+      console.error('Reset error', e);
+    }
   };
 
   const loadBrokerStatus = async () => {
@@ -120,6 +167,7 @@ export default function Dashboard() {
 
   const connectXM = async (e) => {
     e.preventDefault();
+    console.log("Attempting to connect to XM with:", xmForm);
     setLoading(true);
     try {
       const res = await fetch('http://localhost:8000/api/user/xm', {
@@ -128,10 +176,12 @@ export default function Dashboard() {
         body: JSON.stringify(xmForm)
       });
       if (!res.ok) throw new Error("Failed to connect");
+      console.log("Credentials saved, initializing MT5...");
       setShowXmModal(false);
       // Wait a bit for MT5 to init
       setTimeout(loadBrokerStatus, 2000);
     } catch (e) {
+      console.error("Connection error:", e);
       alert("Failed to connect to MT5. Ensure MetaTrader 5 terminal is running on the server machine.");
     }
     setLoading(false);
@@ -202,33 +252,53 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* XM Broker Modal */}
-        {showXmModal && (
-          <div className="modal modal-open">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg mb-4">Connect XM Demo Account</h3>
-              <form onSubmit={connectXM}>
-                <div className="form-control mb-2">
-                  <label className="label">Account ID</label>
-                  <input type="text" className="input input-bordered" value={xmForm.account} onChange={e=>setXmForm({...xmForm, account: e.target.value})} required/>
-                </div>
-                <div className="form-control mb-2">
-                  <label className="label">Password</label>
-                  <input type="password" className="input input-bordered" value={xmForm.password} onChange={e=>setXmForm({...xmForm, password: e.target.value})} required/>
-                </div>
-                <div className="form-control mb-6">
-                  <label className="label">Server</label>
-                  <input type="text" className="input input-bordered" value={xmForm.server} onChange={e=>setXmForm({...xmForm, server: e.target.value})} required/>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => setShowXmModal(false)} className="btn btn-ghost">Cancel</button>
-                  <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Connecting...' : 'Connect MT5'}</button>
-                </div>
-              </form>
-            </div>
-            <div className="modal-backdrop" onClick={() => setShowXmModal(false)}></div>
+        {/* Paper Trading Portfolio Section */}
+        <section className="bg-base-200/50 backdrop-blur-xl border border-base-content/10 rounded-2xl p-6 mb-8 shadow-xl">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-bold flex items-center gap-2">
+              <Wallet className="text-primary" /> Paper Trading Portfolio
+            </h3>
+            <button onClick={resetPaperPortfolio} className="btn btn-error btn-xs btn-outline">Reset</button>
           </div>
-        )}
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="bg-base-300/50 p-4 rounded-xl border border-base-content/5">
+              <div className="text-xs opacity-50 uppercase font-bold mb-1">Cash</div>
+              <div className="text-2xl font-black text-success">${paperPortfolio.cash?.toLocaleString()}</div>
+            </div>
+            <div className="bg-base-300/50 p-4 rounded-xl border border-base-content/5">
+              <div className="text-xs opacity-50 uppercase font-bold mb-1">Total Equity</div>
+              <div className="text-2xl font-black text-primary">${paperPortfolio.equity?.toLocaleString()}</div>
+            </div>
+            <div className="bg-base-300/50 p-4 rounded-xl border border-base-content/5">
+              <div className="text-xs opacity-50 uppercase font-bold mb-1">P&L</div>
+              <div className={`text-2xl font-black ${paperPortfolio.equity >= 100000 ? 'text-success' : 'text-error'}`}>
+                {paperPortfolio.equity >= 100000 ? '+' : ''}${(paperPortfolio.equity - 100000).toLocaleString()}
+                <span className="text-xs ml-2 opacity-60">
+                  ({((paperPortfolio.equity - 100000) / 1000).toFixed(2)}%)
+                </span>
+              </div>
+            </div>
+            <div className="bg-base-300/50 p-4 rounded-xl border border-base-content/5">
+              <div className="text-xs opacity-50 uppercase font-bold mb-1">Open Positions</div>
+              <div className="text-2xl font-black text-info">{Object.keys(paperPortfolio.positions || {}).length}</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-3 bg-base-300/30 rounded-xl w-fit">
+            <label className="label cursor-pointer flex gap-3">
+              <span className="label-text font-bold">Auto-Trade</span> 
+              <input type="checkbox" className="toggle toggle-primary" checked={paperPortfolio.auto_trade} onChange={(e) => toggleAutoTrade(e.target.checked)} />
+            </label>
+            <div className="divider divider-horizontal m-0"></div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs opacity-60 uppercase font-bold">Threshold:</span>
+              <div className="badge badge-primary font-mono">{threshold.toFixed(2)}</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Removed modal from here to move it to the root level for better visibility */}
 
         {/* Broker Summary if connected */}
         {brokerStatus?.status === 'connected' && brokerStatus.info && (
@@ -373,6 +443,37 @@ export default function Dashboard() {
         </section>
 
       </main>
+
+      {/* XM Broker Modal - Moved to root level for z-index reliability */}
+      {showXmModal && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-base-100 p-6 rounded-2xl shadow-2xl border border-primary/20 w-full max-w-md animate-in fade-in zoom-in duration-200">
+            <h3 className="font-bold text-2xl mb-6 text-primary flex items-center gap-2">
+              <LinkIcon /> Connect XM MT5
+            </h3>
+            <form onSubmit={connectXM}>
+              <div className="form-control mb-4">
+                <label className="label font-semibold text-xs uppercase opacity-60">Account ID</label>
+                <input type="text" placeholder="e.g. 12345678" className="input input-bordered focus:border-primary" value={xmForm.account} onChange={e=>setXmForm({...xmForm, account: e.target.value})} required/>
+              </div>
+              <div className="form-control mb-4">
+                <label className="label font-semibold text-xs uppercase opacity-60">Password</label>
+                <input type="password" placeholder="MT5 Password" className="input input-bordered focus:border-primary" value={xmForm.password} onChange={e=>setXmForm({...xmForm, password: e.target.value})} required/>
+              </div>
+              <div className="form-control mb-8">
+                <label className="label font-semibold text-xs uppercase opacity-60">Server</label>
+                <input type="text" placeholder="e.g. XMGlobal-Demo" className="input input-bordered focus:border-primary" value={xmForm.server} onChange={e=>setXmForm({...xmForm, server: e.target.value})} required/>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+                  {loading ? <span className="loading loading-spinner"></span> : 'Connect MetaTrader 5'}
+                </button>
+                <button type="button" onClick={() => setShowXmModal(false)} className="btn btn-ghost btn-sm">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

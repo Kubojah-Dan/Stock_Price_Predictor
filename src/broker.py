@@ -106,5 +106,13 @@ def place_order(symbol: str, order_type: str, volume: float, price: float = None
         "price": result.price
     }
 
+def get_symbol_price(symbol):
+    """Get the current live price for a symbol from MT5."""
+    tick = mt5.symbol_info_tick(symbol)
+    if tick is None:
+        # Try finding the symbol (sometimes brokers add suffixes like .m, .x)
+        return None
+    return (tick.bid + tick.ask) / 2
+
 def shutdown_mt5():
     mt5.shutdown()
