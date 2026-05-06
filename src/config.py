@@ -1,4 +1,4 @@
-TICKERS     = ["AAPL", "MSFT", "NVDA", "GOOGL"]
+TICKERS     = ["AAPL", "MSFT", "NVDA", "GOOGL", "GC=F"]
 START_DATE  = "2015-01-01"
 CLF_HORIZON = 5
 MODELS_DIR  = "models"
